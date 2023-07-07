@@ -11,7 +11,7 @@ This document does not cover all bases, it is meant to teach beginners about con
 * [Getting started](#getting-started)
 * [Adding commands/options to the menu](#adding-commandsoptions-to-the-menu)
 * [Interacting with the game](#interacting-with-the-game)
-* [What are script globals and locals?](#what-are-script-globals-and-locals)
+* [Script globals and locals](#script-globals-and-locals)
 * [Practical examples](#practical-examples)
 
 ## Tooling

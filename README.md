@@ -129,3 +129,52 @@ PED.SET_PED_INTO_VEHICLE(PLAYER.PLAYER_PED_ID(), veh, -1) -- Put the user into t
 ```
 
 Keep in mind model names are not the same as they display in game, e.g. the Space Docker's model name is actually `dune2`.
+
+Stand also offers the functionality of getting all of a type of entity in your loaded session. This can be used for all sorts of things, one of which can be to teleport all pickups to yourself;
+
+```lua
+util.require_natives("2944a")
+
+local function teleportPickups(v3Coords)
+    local all_pickups = entities.get_all_pickups_by_handle()
+
+    for _, pickup in pairs(all_pickups) do --iterate over the table in pairs, with "pickup" being every pickup in the table.
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(pickup) --have to gain control to modify entity
+        ENTITY.SET_ENTITY_COORDS(pickup, v3Coords.x, v3Coords.y, v3Coords.z, false, false, false, false) --set the coords
+    end
+end
+```
+In this function, notice how we have to get control? This is because before you can modify entities in GTA, you need to take control of them. This is a simple function that doesn't have control checking, so it will probably skip over pickups that we don't have control over. This can be circumvented for future cases with a function;
+
+```lua
+--assume we already required natives somewhere above in the script
+local function requestControl(entity, iterations)
+    local i = 0
+    while (not (NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(entity))) and (i < iterations) do
+        NETWORK.NETWORK_REQUEST_CONTROL_OF_ENTITY(entity)
+        util.yield()
+    end
+
+    if NETWORK.NETWORK_HAS_CONTROL_OF_ENTITY(entity) then
+        return true
+    else
+        return false
+    end
+end
+```
+This simple function requests control of an entity every millisecond (hence the `util.yield()`) util either the `iterations` have gone over the specified argument, or the entity has been taken control of. We return with a `boolean` of whether or not the entity has been taken control over, and can use that to determine if we should even try to modify the entity in any awy; since if we don't have control, we can't!
+
+## Resources (Reference Section)
+This will contain the resource list that might aid you on your scripting journey.
+
+| Resource | Details |
+| ---- | ---- |
+| [Native Documentation](https://nativedb.dotindustries.dev/natives) | Contains the native functions from GTA V. These are the functions that govern the game, and we can use them via the menu. Almost every single basic feature can be achieved with a combination of these. |
+| [Stand LUA Documentation](https://stand.gg/help/lua-api-documentation) | Contains the functions necessary to add features to Stand. Everything from buttons to sliders to submenus, and even simpler versions of native functions can be found here. |
+| [Pluto Documentation](https://pluto-lang.org/docs/Introduction) | Documentation for the `pluto` language that Stand now uses, as it offers more functionality than LUA, while still maintaining backwards-compatibility. Made by well-known member and staff *well in that case*. |
+| [Data Dumps](https://github.com/DurtyFree/gta-v-data-dumps) | This is a repository of well-known data dumper durtyfree on GitHub, and is extremely helpful for developing scripts. |
+| [Hash Database](https://github.com/calamity-inc/gta-v-joaat-hash-db) | An alternative (and possibly more comprehensible) version of the Data Dumps, which contains JOAAT (Jenkins-One-At-A-Time) hashes for GTA V, including pickups, weapons, and more. |
+| [Decompiled Scripts](https://github.com/Primexz/GTAV-Decompiled-Scripts) | These are scripts that govern GTA V, which have been decompiled for your convenience. Global variables and the way missions work are detailed in here, if you can read them. Keep in mind that this includes not just GTA Online scripts, but GTA V ones as well, meaning if you don't look where you need to, you'll be led on a wild goose chase. |
+| [UnknownCheats GTAV Forum](https://www.unknowncheats.me/forum/grand-theft-auto-v/) | This houses more experienced developers that develop cheats and try to look for exploits in GTA V. |
+| [Yimura's Offsets](https://github.com/Yimura/GTAV-Classes) | In making his open-source GTA V menu YimMenu, Yimura has provided us with the offsets, which can be useful if you are screwing around with memory and offsets in your scripts. |
+| And, of course, the community! | Have a look around other scripts on GitHub or the Repository, but remember; ***copy-pasting is not the way to learn, it's the way to look like a fool***. And don't be afraid to ask questions in the Discord `#programming` channel! |

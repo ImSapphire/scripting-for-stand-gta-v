@@ -118,7 +118,7 @@ util.require_natives("2944a")
 local function spawnVehicle(model_name, pos, heading = 0.0)
 	local hash = util.joaat(model_name)
 	util.request_model(hash)
-	local vehicle = entities.create_vehicle(hash, pos, 0.0) -- Stand expects a Vector3, so we don't need to do pos.x, pos.y, pos.z
+	local vehicle = entities.create_vehicle(hash, pos, heading) -- Stand expects a Vector3, so we don't need to do pos.x, pos.y, pos.z
 	STREAMING.SET_MODEL_AS_NO_LONGER_NEEDED(hash) -- Allow the engine to remove the model from memory when it is no longer being used
 	return vehicle
 end

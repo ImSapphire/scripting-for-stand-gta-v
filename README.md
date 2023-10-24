@@ -58,19 +58,17 @@ To do things like spawning and modifying entities, it is recommended to invoke t
 
 You will need to call `util.require_natives` to easily invoke these commands. For development purposes, calling this with no arguments (or version being nil) is fine, however in a release script you should specify the natives lib version you used at the time of development. You can find all library versions in the [Repository](https://stand.gg/focus#Stand%3ELua%20Scripts%3ERepository), all of which are prefixed with `natives-`.
 
-As of natives library version `2944a`, the following flavours are available:
+As of natives library version `2944b`, the following flavours are available:
 
 | Flavour | Description |
 | ------- | ----------- |
 |    g    | Omits namespaces, for example `PLAYER.PLAYER_ID` would become just `PLAYER_ID`.
-|   uno   | Not type safe, so for example integers will not be automatically converted to floats. Vector3 instances will be pushed as 3 floats instead of a reference/pointer, unless you use `memory.addrof`. This means you can substitute `pos.x, pos.y, pos.z` with `pos`. |
-|  g-uno  | A combination of the above two flavours. |
 
 A list of all scripting commands is available [here](https://nativedb.dotindustries.dev). Keep in mind type names displayed will be C-style, so `const char*` == `string`.
 
 An example of using scripting commands:
 ```lua
-util.require_natives("2944a")
+util.require_natives("2944b")
 
 -- Teleport forward
 -- Using players.user_ped() here is faster, but for the example this is fine.
